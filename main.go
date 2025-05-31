@@ -151,8 +151,11 @@ func printResults(fi *FileInfo, level int, prefix string, isLast bool) {
 	if level > 0 {
 		displayPath = path.Base(fi.Path)
 	}
-
-	fmt.Printf("%s%s%s: %d\n", prefix, symbol, displayPath, fi.Lines)
+	if fi.IsDir {
+		fmt.Printf("%s%s%s/: %d\n", prefix, symbol, displayPath, fi.Lines)
+	} else {
+		fmt.Printf("%s%s%s: %d\n", prefix, symbol, displayPath, fi.Lines)
+	}
 
 	newPrefix := ""
 	if level == 0 {
