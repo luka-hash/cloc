@@ -32,6 +32,8 @@ func main() {
 		rootPath = args[0]
 	}
 
+	rootPath = filepath.Clean(rootPath)
+
 	root := countLinesInDirectory(rootPath)
 	if root != nil {
 		if *silent {
