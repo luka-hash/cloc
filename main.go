@@ -20,26 +20,37 @@ type FileInfo struct {
 	Children []*FileInfo
 }
 
-var (
-	silent = flag.Bool("silent", false, "print only the number of lines of code")
-)
+
+type Options struct {
+	silent bool
+}
 
 func main() {
+	silent := flag.Bool("silent", false, "print only the number of lines of code")
 	flag.Parse()
+	options := Options{
+		silent: *silent,
+	}
 	args := flag.Args()
-	rootPath := "."
-	if len(args) != 0 {
-		rootPath = args[0]
+	if len(args) == 0 {
+		countLines(".", options)
+	}else {
+		for _, arg := range args {
+			countLines(arg, options)
+		}
 	}
 
-	rootPath = filepath.Clean(rootPath)
+}
 
-	root := countLinesInDirectory(rootPath)
-	if root != nil {
-		if *silent {
-			fmt.Println(root.Lines)
+func countLines(filename string, options Options) {
+	filename = filepath.Clean(filename)
+
+	fi := countLinesInDirectory(filename)
+	if fi != nil {
+		if options.silent {
+			fmt.Println(fi.Lines)
 		} else {
-			printResults(root, 0, "", true)
+			printResults(fi, 0, "", true)
 		}
 	}
 }
